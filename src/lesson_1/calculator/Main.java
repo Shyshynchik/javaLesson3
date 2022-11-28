@@ -1,4 +1,3 @@
-package lesson_1.calculator;
 
 public class Main {
 

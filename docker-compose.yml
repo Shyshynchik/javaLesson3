@@ -1,0 +1,10 @@
+version: '3'
+services:
+  openjdk:
+    build: openjdk
+    command:
+      - tail
+      - -f
+      - /dev/null
+    volumes:
+      - ./src:/root/examples

@@ -1,5 +1,3 @@
-package lesson_1.calculator;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.regex.MatchResult;
