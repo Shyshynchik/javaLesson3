@@ -1,5 +1,3 @@
-package lesson_1.calculator;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.regex.MatchResult;
@@ -24,14 +22,14 @@ public class Calculator {
         }
 
         while (!this.symbols.isEmpty()) {
-            this.calculateValue(this.numbers.pop(), this.numbers.pop(), this.symbols.pop());
+            this.calculateValue();
         }
 
         return Integer.parseInt(numbers.pop());
     }
 
     private String[] getExpressionElements(String expression) {
-        Pattern pattern = Pattern.compile("\\d+|[+\\-*/]|[(\\)/]");
+        Pattern pattern = Pattern.compile("-?\\d+|[+\\-*/]|[(\\)/]");
 
         Matcher matcher = pattern.matcher(expression);
 
@@ -49,14 +47,14 @@ public class Calculator {
             return;
         }
         if (element.equals(")")) {
-            this.calculateBracket();
+            this.calculateBracket(element);
             return;
         }
 
         int operationPriority = this.getOperationPriority(element);
         int lastOperationPriority = this.getOperationPriority(lastOperation);
         if (operationPriority <= lastOperationPriority) {
-            this.calculateValue(numbers.pop(), numbers.pop(), symbols.pop());
+            this.calculateValue();
             this.symbols.push(element);
             return;
         }
@@ -80,22 +78,23 @@ public class Calculator {
         return -1;
     }
 
-    private void calculateBracket() {
-        String symbol = this.symbols.pop();
+    private void calculateBracket(String symbol) {
         while (!symbol.equals("(")) {
-            calculateValue(this.numbers.pop(), this.numbers.pop(), symbol);
+            calculateValue();
             symbol = this.symbols.pop();
         }
 
         if (!this.symbols.isEmpty()) {
-            lastOperation = this.symbols.pop();
+            this.lastOperation = this.symbols.pop();
             this.symbols.push(lastOperation);
         }
     }
 
-    private void calculateValue(String secondValue, String firstValue, String operation) {
-        Integer first = Integer.parseInt(firstValue);
-        Integer second = Integer.parseInt(secondValue);
+    private void calculateValue() {
+        String operation = this.symbols.pop();
+        Integer second = Integer.parseInt(this.numbers.pop());
+        Integer first = Integer.parseInt(this.numbers.pop());
+
 
         if (operation.equals("+")) {
             this.numbers.push(String.valueOf(first + second));
