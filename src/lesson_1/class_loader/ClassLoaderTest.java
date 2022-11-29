@@ -6,4 +6,8 @@ public class ClassLoaderTest {
 
         var hm = new java.util.HashMap();
     }
+
+    public void helloWorld() {
+        System.out.println("Hello world");
+    }
 }
