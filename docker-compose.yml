@@ -7,4 +7,4 @@ services:
       - -f
       - /dev/null
     volumes:
-      - ./src:/root/examples
+      - ./:/root/examples

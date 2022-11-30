@@ -41,13 +41,10 @@ public class ProxyClassLoader extends ClassLoader {
             var bytesArray = loadClassFileData(file);
             System.out.println("File size " + bytesArray.length + " B");
 
-//            for (byte el: bytesArray) {
-//                System.out.print(el + " ");
-//            }
-
             for (byte el: bytesArray) {
                 System.out.printf("%X ", el);
             }
+            System.out.println();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
