@@ -1,19 +1,35 @@
+import blocks.*;
+import blocks.impl.*;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.instrument.Instrumentation;
-import java.nio.charset.StandardCharsets;
-import java.util.HexFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProxyClassLoader extends ClassLoader {
+
+    private final List<Block> blocks = new ArrayList<Block>(
+            List.of(
+                    new MagicNumberBlock(),
+                    new MajorVersionBlock(),
+                    new MinorVersionBlock(),
+                    new ConstantPoolBlock(),
+                    new AccessFlagBlock(),
+                    new ThisClassBlock(),
+                    new SuperClassBlock(),
+                    new InterfacesBlock(),
+                    new FieldBlock()
+            )
+    );
+
     public ProxyClassLoader(ClassLoader parent) {
         super(parent);
     }
 
     private Class<?> getClass(String name) throws ClassNotFoundException {
-        System.out.println("\nCalling getClass " + name);
-        String file = name.replace('.', File.separatorChar) + ".class";
+        String file = getFileName(name);
         byte[] b;
         try {
             b = loadClassFileData(file);
@@ -29,28 +45,44 @@ public class ProxyClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        System.out.println("Loading Class '" + name + "'");
+        System.out.println("Class '" + name + "'");
 
-        if (isCustomClass(name)) {
-            System.out.println("Loading Class using ProxyClassLoader");
-            return getClass(name);
-        }
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(getFileName(name))) {
 
-        try {
-            String file = name.replace('.', File.separatorChar) + ".class";
-            var bytesArray = loadClassFileData(file);
-            System.out.println("File size " + bytesArray.length + " B");
-
-            for (byte el: bytesArray) {
-                System.out.printf("%X ", el);
-            }
-            System.out.println();
+            System.out.println("Total size = " + stream.readAllBytes().length + "B");
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        readBlocksBytes(getFileName(name));
+
+        if (isCustomClass(name)) {
+            return getClass(name);
+        }
+
+
         return super.loadClass(name);
+    }
+
+    private void readBlocksBytes(String fileName) {
+        try (InputStream stream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+
+            int size = 0;
+
+            for (Block block: blocks) {
+                size += block.printBlockSize(stream);
+            }
+
+            System.out.println("Total size = " + size + "B\n");
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getFileName(String name) {
+        return name.replace('.', File.separatorChar) + ".class";
     }
 
     private byte[] loadClassFileData(String name) throws IOException {

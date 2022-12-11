@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class ClassLoaderTest {
+public final class ClassLoaderTest {
     public static void main(String[] args) {
         ClassLoaderTest that = new ClassLoaderTest();
 

@@ -12,13 +12,6 @@ RUN \
 ENV PATH $PATH:/root/.local/share/coursier/bin
 
 RUN \
-  yes | yum install zip unzip && \
-  curl -s "https://get.sdkman.io" | bash &&\
-  source /root/.sdkman/bin/sdkman-init.sh &&\
-  sdk install kotlin &&\
-  sdk install gradle
-
-RUN \
   yes | yum install wget &&\
   wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo &&\
   yes | yum install apache-maven
