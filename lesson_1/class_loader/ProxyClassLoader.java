@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ProxyClassLoader extends ClassLoader {
 
-    private final List<Block> blocks = new ArrayList<Block>(
+    private static final List<Block> blocks = new ArrayList<>(
             List.of(
                     new MagicNumberBlock(),
                     new MajorVersionBlock(),
@@ -20,7 +23,9 @@ public class ProxyClassLoader extends ClassLoader {
                     new ThisClassBlock(),
                     new SuperClassBlock(),
                     new InterfacesBlock(),
-                    new FieldBlock()
+                    new FieldBlock(),
+                    new MethodsBlock(),
+                    new AttributesBlock()
             )
     );
 
@@ -56,11 +61,11 @@ public class ProxyClassLoader extends ClassLoader {
         }
 
         readBlocksBytes(getFileName(name));
+        System.out.println();
 
         if (isCustomClass(name)) {
             return getClass(name);
         }
-
 
         return super.loadClass(name);
     }
@@ -76,8 +81,8 @@ public class ProxyClassLoader extends ClassLoader {
 
             System.out.println("Total size = " + size + "B\n");
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            System.out.println("Ошибка");
         }
     }
 

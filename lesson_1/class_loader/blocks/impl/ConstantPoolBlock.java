@@ -1,8 +1,7 @@
 package blocks.impl;
 
 import blocks.Block;
-import constants.BlockNames;
-import constants.BlockSizes;
+import constants.Blocks;
 import constants.ConstantPoolInfo;
 
 import java.io.IOException;
@@ -14,11 +13,11 @@ public class ConstantPoolBlock extends CountReader  implements Block {
 
     @Override
     public int printBlockSize(InputStream stream) throws IOException {
-        count = stream.readNBytes(BlockSizes.CONSTANT_POOL_COUNT.getSize());
+        count = stream.readNBytes(Blocks.CONSTANT_POOL_COUNT.getSize());
 
-        System.out.printf(format, BlockNames.CONSTANT_POOL_COUNT.getName(), BlockSizes.CONSTANT_POOL_COUNT.getSize());
+        System.out.printf(format, Blocks.CONSTANT_POOL_COUNT.getName(), Blocks.CONSTANT_POOL_COUNT.getSize());
 
-        return printConstantPollSize(stream) + BlockSizes.CONSTANT_POOL_COUNT.getSize();
+        return printConstantPollSize(stream) + Blocks.CONSTANT_POOL_COUNT.getSize();
     }
 
     private int printConstantPollSize(InputStream stream) throws IOException {
@@ -32,6 +31,7 @@ public class ConstantPoolBlock extends CountReader  implements Block {
 
             if (constantPollBlock == null) {
                 System.out.println("Ошибка");
+                System.out.println(i);
                 continue;
             }
 
@@ -47,7 +47,7 @@ public class ConstantPoolBlock extends CountReader  implements Block {
             stream.skipNBytes(constantPollBlock.getSize());
 
         }
-        System.out.printf(format, BlockNames.CONSTANT_POOL.getName(), size);
+        System.out.printf(format, Blocks.CONSTANT_POOL.getName(), size);
 
         return size;
     }

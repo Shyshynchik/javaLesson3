@@ -1,8 +1,7 @@
 package blocks.impl;
 
 import blocks.Block;
-import constants.BlockNames;
-import constants.BlockSizes;
+import constants.Blocks;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +9,10 @@ import java.io.InputStream;
 public class ThisClassBlock implements Block {
     @Override
     public int printBlockSize(InputStream stream) throws IOException {
-        stream.skipNBytes(BlockSizes.THIS_CLASS.getSize());
+        stream.skipNBytes(Blocks.THIS_CLASS.getSize());
 
-        System.out.printf(format, BlockNames.THIS_CLASS.getName(), BlockSizes.THIS_CLASS.getSize());
+        System.out.printf(format, Blocks.THIS_CLASS.getName(), Blocks.THIS_CLASS.getSize());
 
-        return BlockSizes.THIS_CLASS.getSize();
+        return Blocks.THIS_CLASS.getSize();
     }
 }
